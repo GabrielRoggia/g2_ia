@@ -18,6 +18,8 @@ def main() -> None:
     parser.add_argument("--save", action="store_true", help="Salvar gráficos em results/")
     parser.add_argument("--show-pop", type=int, default=0, metavar="N",
                         help="Mostrar população completa (pior→melhor) a cada N gerações")
+    parser.add_argument("--show-best", type=int, default=0, metavar="N",
+                        help="Salvar gráfico da melhor rota a cada N gerações")
     args = parser.parse_args()
 
     print(f"=== TSP com Algoritmo Genético ===")
@@ -81,8 +83,23 @@ def main() -> None:
 
             print(f"  {n_ind + 1} gráficos salvos em {gen_dir}/")
 
+    def show_best(gen: int, population, fitnesses):
+        if args.show_best and (gen + 1) % args.show_best == 0:
+            ranked = sorted(range(len(population)), key=lambda i: fitnesses[i], reverse=True)
+            best_idx = ranked[0]
+            dist = chromosome_distance(population[best_idx], cities)
+            os.makedirs("results/best", exist_ok=True)
+            path = f"results/best/gen_{gen + 1:04d}_dist{dist:.0f}.png"
+            title = f"Melhor rota — Geração {gen + 1} | dist={dist:.1f}"
+            plot_route(cities, population[best_idx], title=title, save_path=path)
+            print(f"  Gen {gen + 1:>4} | melhor dist: {dist:.2f} → {path}")
+
+    def on_generation(gen, population, fitnesses):
+        show_population(gen, population, fitnesses)
+        show_best(gen, population, fitnesses)
+
     start = time.time()
-    best_route, best_dist = ga.run(on_generation=show_population if args.show_pop else None)
+    best_route, best_dist = ga.run(on_generation=on_generation if (args.show_pop or args.show_best) else None)
     elapsed = time.time() - start
 
     ratio = best_dist / greedy_dist
@@ -91,7 +108,7 @@ def main() -> None:
     print(f"Tempo de execução:                  {elapsed:.1f}s")
     print(f"\nRota: {best_route}")
 
-    if args.save:
+    if args.save or args.show_best:
         os.makedirs("results", exist_ok=True)
         route_title = f"Melhor Rota TSP ({args.cities} cidades | dist={best_dist:.1f})"
         plot_route(cities, best_route, title=route_title, save_path="results/route.png")
