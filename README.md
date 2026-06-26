@@ -165,6 +165,46 @@ Definidos em [specs/criterios-aceite.md](specs/criterios-aceite.md). Os principa
 
 ---
 
+## Exemplo com todas as opções
+
+```bash
+python -m src.main \
+  --cities 20 \
+  --population 100 \
+  --generations 500 \
+  --mutation 0.02 \
+  --elitism 5 \
+  --seed 42 \
+  --save \
+  --show-best 50 \
+  --show-pop 100
+```
+
+O que este comando gera:
+
+```
+results/
+├── route.png                     # melhor rota final (--save / --show-best)
+├── evolution.png                 # curva de distância por geração (--save / --show-best)
+├── best/
+│   ├── gen_0050_dist399.png      # melhor rota na geração 50  (--show-best 50)
+│   ├── gen_0100_dist371.png      # melhor rota na geração 100
+│   ├── gen_0150_dist358.png
+│   ├── ...
+│   └── gen_0500_dist352.png      # melhor rota na geração 500
+├── gen_0100/                     # população completa na geração 100 (--show-pop 100)
+│   ├── populacao_barras.png
+│   ├── rota_01_PIOR_distXXX.png
+│   ├── ...
+│   └── rota_100_MELHOR_elite_distXXX.png
+├── gen_0200/
+├── gen_0300/
+├── gen_0400/
+└── gen_0500/
+```
+
+---
+
 ## Exemplo de saída
 
 ```
