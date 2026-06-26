@@ -56,6 +56,27 @@ Para cada geração exibida são gerados os seguintes arquivos em `results/gen_X
 
 O sufixo `_elite` indica que o indivíduo será copiado intacto para a próxima geração (elitismo).
 
+### Salvar gráfico da melhor rota por geração
+
+A flag `--show-best N` salva o gráfico da melhor rota a cada N gerações em `results/best/`, e automaticamente também gera `results/route.png` e `results/evolution.png` ao final:
+
+```bash
+# Salvar melhor rota a cada geração
+python -m src.main --show-best 1
+
+# Salvar a cada 50 gerações (parâmetros padrão)
+python -m src.main --show-best 50
+```
+
+Os arquivos gerados em `results/best/` têm o nome `gen_XXXX_distYYY.png`, onde `XXXX` é o número da geração e `YYY` é a distância da melhor rota naquele momento. Abrindo as imagens em sequência é possível ver a rota evoluindo — nas primeiras gerações há muitos cruzamentos, e nas últimas as linhas ficam mais organizadas.
+
+As flags podem ser combinadas:
+
+```bash
+# Melhor rota por geração + população completa a cada 5 + gráficos finais
+python -m src.main --show-best 1 --show-pop 5
+```
+
 ### Rodar os testes
 ```bash
 pytest tests/ -v
@@ -125,6 +146,22 @@ Definidos em [specs/criterios-aceite.md](specs/criterios-aceite.md). Os principa
 - **CA06:** Resultado do AG é ≤ 120% da distância do greedy nearest neighbor
 - **CA07:** Execuções com a mesma seed produzem resultados idênticos
 - **CA10:** Execução completa em menos de 30 segundos (20 cidades, 500 gerações)
+
+---
+
+## Parâmetros disponíveis
+
+| Parâmetro | Padrão | Descrição |
+|---|---|---|
+| `--cities N` | 20 | Número de cidades no mapa |
+| `--population N` | 100 | Tamanho da população por geração |
+| `--generations N` | 500 | Número de gerações |
+| `--mutation F` | 0.02 | Taxa de mutação (0.0 a 1.0) |
+| `--elitism N` | 5 | Quantos melhores indivíduos são preservados por geração |
+| `--seed N` | 42 | Seed aleatória para reprodutibilidade |
+| `--save` | — | Salva `results/route.png` e `results/evolution.png` |
+| `--show-pop N` | — | Salva população completa (barras + rota de cada indivíduo) a cada N gerações em `results/gen_XXXX/` |
+| `--show-best N` | — | Salva gráfico da melhor rota a cada N gerações em `results/best/` + gráficos finais |
 
 ---
 
