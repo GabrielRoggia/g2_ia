@@ -26,12 +26,35 @@ pip install -r requirements.txt
 # Execução padrão: 20 cidades, 500 gerações, população 100
 python -m src.main
 
-# Com gráficos salvos em results/
+# Com gráficos da rota final e curva de evolução salvos em results/
 python -m src.main --save
 
 # Configuração customizada
 python -m src.main --cities 30 --generations 1000 --population 150 --mutation 0.03 --seed 7 --save
 ```
+
+### Visualizar população geração a geração
+
+A flag `--show-pop N` exibe a população completa ordenada do pior ao melhor indivíduo a cada N gerações e salva os gráficos em subpastas dentro de `results/`:
+
+```bash
+# Mostrar e salvar gráficos a cada geração
+python -m src.main --cities 10 --population 15 --generations 3 --show-pop 1
+
+# Mostrar a cada 100 gerações (parâmetros padrão)
+python -m src.main --show-pop 100
+```
+
+Para cada geração exibida são gerados os seguintes arquivos em `results/gen_XXXX/`:
+
+| Arquivo | Conteúdo |
+|---|---|
+| `populacao_barras.png` | Barras de todos os indivíduos (vermelho = descartado, verde = elite preservada) |
+| `rota_01_PIOR_distXXX.png` | Rota do pior indivíduo da geração |
+| `rota_02_02_distXXX.png` ... | Indivíduos intermediários em ordem crescente de qualidade |
+| `rota_N_MELHOR_elite_distXXX.png` | Rota do melhor indivíduo da geração |
+
+O sufixo `_elite` indica que o indivíduo será copiado intacto para a próxima geração (elitismo).
 
 ### Rodar os testes
 ```bash
